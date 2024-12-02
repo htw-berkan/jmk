@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jemek Jemowit</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<!--    <script src="./node_modules/aframe/dist/aframe-v1.6.0.min.js"></script>-->
+</head>
+<body>
+<a-scene shadow="enabled: true">
+    <a-assets>
+        <img id="sky" src="assets/jmk-bg.svg">
+        <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
+    </a-assets>
+
+    <a-sky src="#sky"
+           repeat="10 10"
+           opacity="1"
+           radius="500"
+           transparent="true"
+           scale="-1 1 1">
+    </a-sky>
+
+    <a-light type="directional"
+             position="1 5 1"
+             intensity="1"
+             castShadow="true"
+             shadow-mapWidth="1024"
+             shadow-mapHeight="1024"
+             shadow-camera-near="0.5"
+             shadow-camera-far="50"
+             shadow-camera-left="-5"
+             shadow-camera-right="5"
+             shadow-camera-top="5"
+             shadow-camera-bottom="-5">
+    </a-light>
+
+    <a-plane position="0 0 0"
+             rotation="-90 0 0"
+             width="10"
+             height="10"
+             color="#7BC8A4"
+             shadow="receive: true">
+    </a-plane>
+
+    <a-entity gltf-model="#jmk"
+              scale="1 1 1"
+              position="0 0.5 -1"
+              shadow="cast: true">
+    </a-entity>
+
+    <!--<a-entity camera position="0 0.5 0" shadow="receive: false"></a-entity>-->
+
+</a-scene>
+</body>
+</html>
