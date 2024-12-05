@@ -29,6 +29,7 @@
             shadow-camera-automatic="#objects">
     </a-light>
 
+    <a-marker preset="hiro">
     <a-entity
             id="ar-model"
             gltf-model="#jmk"
@@ -36,6 +37,8 @@
             position="0 1 0"
             shadow="cast: true; receive: false">
     </a-entity>
+    </a-marker>
+
     <a-entity
             id="floor"
             geometry="primitive: plane; height: 10; width: 10"
