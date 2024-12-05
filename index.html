@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0", user-scalable=no">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <title>Jemek jemowit</title>
+</head>
+<body>
+<a-scene embedded ar>
+
+    <a-assets>
+        <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
+    </a-assets>
+
+    <a-entity
+            id="ar-model"
+            gltf-model="#jmk"
+            scale="1 1 1"
+            position="0 1 0"
+            shadow="cast: true; receive: false">
+    </a-entity>
+
+    <a-camera id="camera" position="0 1 -2"></a-camera>
+
+    <script>
+
+    </script>
+</a-scene>
+</body>
+</html>
