@@ -7,14 +7,27 @@
     <title>Jemek jemowit</title>
 </head>
 <body>
-<a-scene>
+<a-scene shadow="type: pcfsoft; pcfsoft-size: 16; pcfsoft-radius: 2">
 
     <a-assets>
-        <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
+        <a-asset-item
+                id="jmk"
+                src="assets/jmk-head.glb">
+        </a-asset-item>
     </a-assets>
 
-    <a-camera id="camera" position="0 1 1"></a-camera>
+    <a-camera
+            id="camera"
+            position="0 1 1">
+    </a-camera>
 
+    <a-light
+            type="directional"
+            light="castShadow:true;"
+            position="1 1 1"
+            intensity="1"
+            shadow-camera-automatic="#objects">
+    </a-light>
 
     <a-entity
             id="ar-model"
@@ -29,7 +42,8 @@
             position="0 0 0"
             rotation="-90 0 0"
             material="color: #7BC8A4"
-            material="side: double">
+            material="side: double"
+            shadow="receive: true">
     </a-entity>
 
     <script>
