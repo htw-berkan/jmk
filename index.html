@@ -7,7 +7,7 @@
     <title>Jemek jemowit</title>
 </head>
 <body>
-<a-scene embedded ar>
+<a-scene>
 
     <a-assets>
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
@@ -17,11 +17,11 @@
             id="ar-model"
             gltf-model="#jmk"
             scale="1 1 1"
-            position="0 1 0"
+            position="0 1 -5"
             shadow="cast: true; receive: false">
     </a-entity>
 
-    <a-camera id="camera" position="0 1 -2"></a-camera>
+    <a-camera id="camera" position="0 1 0"></a-camera>
 
     <script>
 
