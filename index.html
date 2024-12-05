@@ -32,11 +32,7 @@
     <!-- VR-Modell -->
     <a-entity id="vr-model" gltf-model="#jmk" scale="1 1 1" position="0 1 -1" shadow="cast: true" visible="false"></a-entity>
 
-    <!-- AR-Modell
-    <a-marker preset="hiro">
-        <a-entity id="ar-model" gltf-model="#jmk" scale="1 1 1" position="0 0 0" shadow="cast: true" visible="false"></a-entity>
-    </a-marker>-->
-
+    <!-- AR-Modell -->
     <a-entity camera>
         <a-entity id="ar-model" gltf-model="#jmk" scale="1 1 1" position="0 0 -1" shadow="cast: true" visible="false"></a-entity>
     </a-entity>
@@ -48,19 +44,24 @@
         const vrModel = document.getElementById('vr-model');
         const arModel = document.getElementById('ar-model');
 
+        const toggleVisibility = (isVr) => {
+            scene.setAttribute('embedded', !isVr);
+            vrModel.setAttribute('visible', isVr.toString());
+            arModel.setAttribute('visible', (!isVr).toString());
+
+            if (isVr) {
+                scene.enterVR();
+            } else {
+                scene.setAttribute('arjs', 'trackingMethod: best; sourceType: webcam;');
+            }
+        };
+
         document.getElementById('enter-vr').addEventListener('click', function () {
-            scene.setAttribute('embedded', false);
-            vrModel.setAttribute('visible', 'true');
-            arModel.setAttribute('visible', 'false');
-            scene.enterVR();
+            toggleVisibility(true);
         });
 
         document.getElementById('enter-ar').addEventListener('click', function () {
-            scene.setAttribute('embedded', true);
-            vrModel.setAttribute('visible', 'false');
-            arModel.setAttribute('visible', 'true');
-            // AR.js initialisieren
-            scene.setAttribute('arjs', 'trackingMethod: best; sourceType: webcam;');
+            toggleVisibility(false);
         });
     });
 </script>
