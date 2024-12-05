@@ -13,15 +13,24 @@
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
     </a-assets>
 
+    <a-camera id="camera" position="0 1 1"></a-camera>
+
+
     <a-entity
             id="ar-model"
             gltf-model="#jmk"
             scale="1 1 1"
-            position="0 1 -5"
+            position="0 1 0"
             shadow="cast: true; receive: false">
     </a-entity>
-
-    <a-camera id="camera" position="0 1 0"></a-camera>
+    <a-entity
+            id="floor"
+            geometry="primitive: plane; height: 10; width: 10"
+            position="0 0 0"
+            rotation="-90 0 0"
+            material="color: #7BC8A4"
+            material="side: double">
+    </a-entity>
 
     <script>
 
