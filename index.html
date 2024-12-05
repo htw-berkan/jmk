@@ -10,23 +10,24 @@
 </head>
 
 <body>
-<a-scene embedded arjs>
+<a-scene>
     <a-assets>
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
     </a-assets>
 
 
     <!-- AR-Modell -->
-    <a-marker preset="hiro">
+    <!--a-marker preset="hiro"-->
         <a-entity
                 id="ar-model"
                 gltf-model="#jmk"
                 scale="1 1 1"
-                position="0 0 0">
+                position="0 1 0"
+                shadow="cast: true; receive: false">
         </a-entity>
-    </a-marker>
+    <!--/a-marker-->
 
-    <a-entity camera></a-entity>
+    <a-camera position="0 1.2 0"></a-camera>
 </a-scene>
 
 <!--script>
