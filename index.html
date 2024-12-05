@@ -10,16 +10,11 @@
 </head>
 
 <body>
-<!-- Schaltflächen zur Auswahl des Modus -->
-<div style="position: fixed; top: 10px; left: 10px; z-index: 1000;">
-    <button id="enter-vr">VR-Modus</button>
-    <button id="enter-ar">AR-Modus</button>
-</div>
-
 <a-scene embedded arjs>
     <a-assets>
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
     </a-assets>
+
 
     <!-- AR-Modell -->
     <a-marker preset="hiro">
@@ -27,17 +22,14 @@
                 id="ar-model"
                 gltf-model="#jmk"
                 scale="1 1 1"
-                position="0 0 0"
-                shadow="cast: true"
-                visible="false">
+                position="0 0 0">
         </a-entity>
     </a-marker>
 
+    <a-entity camera></a-entity>
 </a-scene>
 
 <!--script>
-    <a-entity camera></a-entity>
-
     document.addEventListener('DOMContentLoaded', function () {
         const scene = document.querySelector('a-scene');
         const vrModel = document.getElementById('vr-model');
