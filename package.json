@@ -1,0 +1,20 @@
+{
+  "name": "jmk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Berkan",
+  "license": "UNLICENSED",
+  "description": "Jemek Jemowit AR Busines Card",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/htw-berkan/jmk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/htw-berkan/jmk/issues"
+  },
+  "homepage": "https://github.com/htw-berkan/jmk#readme"
+}
