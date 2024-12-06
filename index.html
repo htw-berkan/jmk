@@ -31,19 +31,29 @@
             shadow-camera-automatic="#objects">
     </a-light>
 
-    <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
+    <a-box color="red" position="0 2 -5" shadow="cast:true" rotation="0 45 45" scale="2 2 2"></a-box>
 
-    <a-entity
-            id="ar-model"
+    <a-marker preset='hiro'>
+        <a-entity
+                id="ar-model"
+                gltf-model="#jmk"
+                scale="4 4 4"
+                position="0 1.5 -2"
+                shadow="cast: true; receive: false">
+        </a-entity>
+    </a-marker>
+
+        <a-entity
+            id="vr-model"
             gltf-model="#jmk"
-            scale="2 2 2"
-            position="0 1 -2"
+            scale="4 4 4"
+            position="2 2 -3"
             shadow="cast: true; receive: false">
     </a-entity>
 
     <a-entity
             id="floor"
-            geometry="primitive: plane; height: 10; width: 10"
+            geometry="primitive: plane; height: 100; width: 100;"
             position="0 0 0"
             rotation="-90 0 0"
             material="color: #7BC8A4"
