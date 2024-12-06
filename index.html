@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0", user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <title>Jemek jemowit</title>
 </head>
@@ -27,8 +27,7 @@
             type="directional"
             light="castShadow:true;"
             position="1 1 1"
-            intensity="1"
-            shadow-camera-automatic="#objects">
+            intensity="1">
     </a-light>
 
     <a-box color="red" position="0 2 -5" shadow="cast:true" rotation="0 45 45" scale="2 2 2"></a-box>
@@ -38,36 +37,34 @@
                 id="ar-model"
                 gltf-model="#jmk"
                 scale="4 4 4"
-                position="0 1.5 -2"
+                position="0 1.5 0"
                 shadow="cast: true; receive: false">
         </a-entity>
     </a-marker>
 
         <a-entity
-            id="vr-model"
-            gltf-model="#jmk"
-            scale="4 4 4"
-            position="2 2 -3"
-            shadow="cast: true; receive: false"
-            hide-on-enter-ar>
+                hide-on-enter-ar
+                id="vr-model"
+                gltf-model="#jmk"
+                scale="4 4 4"
+                position="2 2 -3"
+                shadow="cast: true; receive: false">
     </a-entity>
 
     <a-entity
+            hide-on-enter-ar
             id="floor"
             geometry="primitive: plane; height: 100; width: 100;"
             position="0 0 0"
             rotation="-90 0 0"
             material="color: #7BC8A4"
-            material="side: double"
-            shadow="receive: true"
-            hide-on-enter-ar>
+            shadow="receive: true">
     </a-entity>
 
-    <a-sky
+    <a-sky hide-on-enter-ar
             src="#sky"
             repeat="10 10"
-            transparent="true"
-            hide-on-enter-ar>
+            transparent="true">
     </a-sky>
 
     <script>
