@@ -43,7 +43,6 @@
     </a-marker>
 
         <a-entity
-                hide-on-enter-ar
                 id="vr-model"
                 gltf-model="#jmk"
                 scale="4 4 4"
@@ -52,7 +51,6 @@
     </a-entity>
 
     <a-entity
-            hide-on-enter-ar
             id="floor"
             geometry="primitive: plane; height: 100; width: 100;"
             position="0 0 0"
@@ -61,7 +59,8 @@
             shadow="receive: true">
     </a-entity>
 
-    <a-sky hide-on-enter-ar
+    <a-sky
+            hide-on-enter-ar
             src="#sky"
             repeat="10 10"
             transparent="true">
