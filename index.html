@@ -14,11 +14,13 @@
                 id="jmk"
                 src="assets/jmk-head.glb">
         </a-asset-item>
+        <img
+                id="sky"
+                src="assets/jmk-bg.svg">
     </a-assets>
 
     <a-camera
-            id="camera"
-            position="0 1 1">
+            id="camera">
     </a-camera>
 
     <a-light
@@ -29,7 +31,6 @@
             shadow-camera-automatic="#objects">
     </a-light>
 
-    <a-marker preset="hiro">
     <a-entity
             id="ar-model"
             gltf-model="#jmk"
@@ -37,7 +38,6 @@
             position="0 1 0"
             shadow="cast: true; receive: false">
     </a-entity>
-    </a-marker>
 
     <a-entity
             id="floor"
@@ -48,6 +48,12 @@
             material="side: double"
             shadow="receive: true">
     </a-entity>
+
+    <a-sky
+            src="#sky"
+            repeat="10 10"
+            transparent="true">
+    </a-sky>
 
     <script>
 
