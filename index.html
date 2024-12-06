@@ -5,24 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <title>Jemek jemowit</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
-<a-scene shadow="type: pcfsoft; pcfsoft-size: 16; pcfsoft-radius: 2">
+<a-scene>
 
+    <!-- loading assets -->
     <a-assets>
+        <!-- asset for jemek head -->
         <a-asset-item
                 id="jmk"
                 src="assets/jmk-head.glb">
         </a-asset-item>
+        <!-- image for the sky -->
         <img
                 id="sky"
                 src="assets/jmk-bg.svg">
     </a-assets>
 
+    <!-- default camera ?? -->
     <a-camera
             id="camera">
     </a-camera>
 
+    <!-- directional light mainly to test shadows for now -->
     <a-light
             type="directional"
             light="castShadow:true;"
@@ -30,8 +36,10 @@
             intensity="1">
     </a-light>
 
+    <!-- red box only for testing purpose -->
     <a-box color="red" position="0 2 -5" shadow="cast:true" rotation="0 45 45" scale="2 2 2"></a-box>
 
+    <!-- trying to load the model on a marker in AR mode, no success so far.. -->
     <a-marker preset='hiro'>
         <a-entity
                 id="ar-model"
@@ -42,15 +50,19 @@
         </a-entity>
     </a-marker>
 
-        <a-entity
-                id="vr-model"
-                gltf-model="#jmk"
-                scale="4 4 4"
-                position="2 2 -3"
-                shadow="cast: true; receive: false">
+    <!-- model to be displayed by default and only in VR -->
+    <a-entity
+            hide-on-enter-ar
+            id="vr-model"
+            gltf-model="#jmk"
+            scale="4 4 4"
+            position="2 2 -3"
+            shadow="cast: true; receive: false">
     </a-entity>
 
+    <!-- Should exist by default and only in VR. in AR the object will be loaded on the marker -->
     <a-entity
+            hide-on-enter-ar
             id="floor"
             geometry="primitive: plane; height: 100; width: 100;"
             position="0 0 0"
@@ -59,6 +71,7 @@
             shadow="receive: true">
     </a-entity>
 
+    <!-- skybox with the chosen asset. should be visible by default and only in VR not in AR -->
     <a-sky
             hide-on-enter-ar
             src="#sky"
