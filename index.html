@@ -4,97 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <!--script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script-->
-    <title>Jemek jemowit</title>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <title>Jemek Jemowit</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
-<body>
+<body style="margin: 0; overflow: hidden;">
 
-<script>
-    AFRAME.registerComponent("focal-changer", {
-        init: function() {
-            this.el.addEventListener("loaded", () => { // wait until loaded
-                const camera = this.el.camera; // grab the THREE.Perspective camera
-                camera.setFocalLength(1); // change the focal lenght
-            })
-        }
-    })
-</script>
+<a-scene embedded arjs='sourceType: webcam; facingMode: environment;' vr-mode-ui="enabled: false">
 
-<a-scene xr-mode-ui="XRMode: xr">
-
-    <!-- loading assets -->
+    <!-- Laden von Assets -->
     <a-assets>
-        <!-- asset for jemek head -->
-        <a-asset-item
-                id="jmk"
-                src="assets/jmk-head.glb">
-        </a-asset-item>
-        <!-- image for the sky -->
-        <img
-                id="sky"
-                src="assets/jmk-bg.svg">
+        <!-- Asset für Jemek-Kopf -->
+        <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
+        <!-- Bild für den Himmel -->
+        <img id="sky" src="assets/jmk-bg.svg">
     </a-assets>
 
-    <!-- default camera ?? -->
-    <a-camera
-            id="camera">
-    </a-camera>
+    <!-- Standardkamera -->
+    <a-camera id="camera"></a-camera>
 
-    <!-- directional light mainly to test shadows for now -->
-    <a-light
-            type="directional"
-            light="castShadow:true;"
-            position="1 1 1"
-            intensity="1">
-    </a-light>
+    <!-- Richtungslicht -->
+    <a-light type="directional" light="castShadow: true;" position="1 1 1" intensity="1"></a-light>
 
-    <!-- red box only for testing purpose -->
-    <a-box color="red" position="0 2 -5" shadow="cast:true" rotation="0 45 45" scale="2 2 2"></a-box>
+    <!-- Rote Box zum Testen -->
+    <a-box color="red" position="0 2 -5" shadow="cast: true" rotation="0 45 45" scale="2 2 2"></a-box>
 
-    <!-- trying to load the model on a marker in AR mode, no success so far.. -->
-    <a-marker preset='hiro' position='0 2 -5' rotation='0 45 0'>
-        <a-entity
-                id="ar-model"
-                gltf-model="#jmk"
-                scale="4 4 4"
-                position="0 1 0"
-                shadow="cast: true; receive: false">
-        </a-entity>
+    <!-- Modell auf Marker in AR-Modus -->
+    <a-marker preset='hiro'>
+        <a-entity id="ar-model" gltf-model="#jmk" scale="4 4 4" position="0 1 0" shadow="cast: true; receive: false"></a-entity>
     </a-marker>
 
-    <!-- model to be displayed by default and only in VR -->
-    <a-entity
-            hide-on-enter-ar
-            id="vr-model"
-            gltf-model="#jmk"
-            scale="4 4 4"
-            position="2 2 -3"
-            shadow="cast: true; receive: false">
-    </a-entity>
+    <!-- Modell nur im VR-Modus -->
+    <a-entity hide-on-enter-ar id="vr-model" gltf-model="#jmk" scale="4 4 4" position="2 2 -3" shadow="cast: true; receive: false"></a-entity>
 
-    <!-- Should exist by default and only in VR. in AR the object will be loaded on the marker -->
-    <a-entity
-            hide-on-enter-ar
-            id="floor"
-            geometry="primitive: plane; height: 100; width: 100;"
-            position="0 0 0"
-            rotation="-90 0 0"
-            material="color: #7BC8A4"
-            shadow="receive: true">
-    </a-entity>
+    <!-- Boden nur im VR-Modus -->
+    <a-entity hide-on-enter-ar id="floor" geometry="primitive: plane; height: 100; width: 100;" position="0 0 0" rotation="-90 0 0" material="color: #7BC8A4" shadow="receive: true"></a-entity>
 
-    <!-- skybox with the chosen asset. should be visible by default and only in VR not in AR -->
-    <a-sky
-            hide-on-enter-ar
-            src="#sky"
-            repeat="10 10"
-            transparent="true">
-    </a-sky>
+    <!-- Himmel nur im VR-Modus -->
+    <a-sky hide-on-enter-ar src="#sky" repeat="10 10" transparent="true"></a-sky>
 
-    <script>
-
-    </script>
 </a-scene>
+
 </body>
 </html>
