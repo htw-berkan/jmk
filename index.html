@@ -9,6 +9,23 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
+
+<script>
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            width: { ideal: 1280 }, // Wunschauflösung
+            height: { ideal: 720 }  // Wunschauflösung
+        }
+    }).then(function(stream) {
+        const videoElement = document.querySelector('video'); // Das Video-Element im A-Frame unterliegt eventuell einer Suche
+        if (videoElement) {
+            videoElement.srcObject = stream;
+        }
+    }).catch(function(err) {
+        console.error("Fehler beim Zugriff auf die Kamera: ", err);
+    });
+</script>
+
 <a-scene xr-mode-ui="XRMode: xr">
 
     <!-- loading assets -->
