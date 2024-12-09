@@ -10,6 +10,17 @@
 </head>
 <body>
 
+<script>
+    AFRAME.registerComponent("focal-changer", {
+        init: function() {
+            this.el.addEventListener("loaded", () => { // wait until loaded
+                const camera = this.el.camera; // grab the THREE.Perspective camera
+                camera.setFocalLength(1); // change the focal lenght
+            })
+        }
+    })
+</script>
+
 <a-scene xr-mode-ui="XRMode: xr">
 
     <!-- loading assets -->
