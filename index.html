@@ -19,10 +19,9 @@
         <img id="sky" src="assets/jmk-bg.svg">
     </a-assets>
 
-
-    <a-plane rotation="-90 0 0" color="#3199f9" opacity="0.95" navigate-on-click="url: https://www.linkedin.com/in/utkarshgpta/">
-        <a-entity id="ar-model" gltf-model="#jmk" scale="1 1 1" position="0 0 0" shadow="cast: true; receive: false"></a-entity
-    </a-plane>
+    <a-box src="#linkedin_icon" position="0.4 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: https://www.linkedin.com/in/utkarshgpta/">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
 
     <a-entity id="camera" cursor="rayOrigin: mouse"></a-entity>
     <a-marker-camera preset='hiro'></a-marker-camera>
