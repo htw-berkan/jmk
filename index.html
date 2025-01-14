@@ -11,40 +11,36 @@
     AFRAME.registerComponent('session-status', {
         init: function () {
             const sceneEl = this.el.sceneEl;
+            var arjsscript = document.createElement('script');
 
             // Event-Listener für AR und VR
             sceneEl.addEventListener('enter-ar', () => {
                 console.log('Entered AR mode');
             });
 
-            sceneEl.addEventListener('enter-vr', () => {
+            sceneEl.addEventListener('enter-vr', (qualifiedName, value) => {
                 console.log('Entered VR mode');
-            });
-
-            sceneEl.addEventListener('exit-ar', () => {
-                console.log('Exited AR mode');
-            });
-
-            sceneEl.addEventListener('exit-vr', () => {
-                console.log('Exited VR mode');
-            });
-
-            // Zeitintervall zur Überprüfung des Modus
-            setInterval(() => {
                 if (sceneEl.is('vr-mode')) {
                     console.log("Current session: VR mode");
                 } else if (sceneEl.is('ar-mode')) {
                     console.log("Current session: AR mode");
-                    var arjsscript = document.createElement('script');
-                    arjsscript.setAttribute(
-                        src = 'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js'
-                    );
+                    arjsscript.setAttribute('src','https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js');
                     document.head.appendChild(arjsscript);
                     console.log("AR.js added!");
                 } else {
                     console.log("Current session: No active XR mode");
                 }
-            }, 1000); // Intervallzeit in Millisekunden
+            });
+
+            sceneEl.addEventListener('exit-ar', () => {
+                console.log('Exited AR mode');
+
+            });
+
+            sceneEl.addEventListener('exit-vr', () => {
+                console.log('Exited VR mode');
+                document.head.removeChild(arjsscript);
+            });
         }
     });
 </script>
