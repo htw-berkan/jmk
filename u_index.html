@@ -48,3 +48,20 @@
 
 </body>
 </html>
+
+<!-- Directional light -->
+<a-light type="directional" light="castShadow:true;" position="1 1 1" intensity="1"></a-light>
+
+<!-- Test box -->
+<a-box color="red" position="0 2 -5" shadow="cast:true" rotation="0 45 45" scale="2 2 2"></a-box>
+
+<!-- AR Marker Model -->
+
+<!-- VR-Only Model -->
+<a-entity hide-on-enter-ar id="vr-model" gltf-model="#jmk" scale="4 4 4" position="2 2 -3" shadow="cast: true; receive: false"></a-entity>
+
+<!-- VR-Only Floor -->
+<a-entity hide-on-enter-ar id="floor" geometry="primitive: plane; height: 100; width: 100;" position="0 0 0" rotation="-90 0 0" material="color: #7BC8A4" shadow="receive: true"></a-entity>
+
+<!-- VR-Only Sky -->
+<a-sky hide-on-enter-ar src="#sky" repeat="10 10" transparent="true"></a-sky>
