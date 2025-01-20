@@ -19,6 +19,9 @@
     <a-sky src="#sky" repeat="10 10" transparent="true"></a-sky>
     <a-light type="directional" light="castShadow:true;" position="1 1 1" intensity="1"></a-light>
     <a-entity id="vr-model" gltf-model="#jmk" scale="4 4 4" position="0 1.5 -1.5" shadow="cast: true; receive: false"></a-entity>
+    <a-box src="#facebook_icon" position="0.8 2 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://facebook.com/utkarshgpta">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>s
     <a-camera active="true" look-controls>
     </a-camera>
 </a-scene>
