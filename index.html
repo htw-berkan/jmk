@@ -9,21 +9,58 @@
 </head>
 <body>
 <a-scene>
+    <!-- Assets -->
     <a-assets>
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
         <img id="sky" src="assets/jmk-bg.svg">
     </a-assets>
 
-
-    <a-entity id="floor" geometry="primitive: plane; height: 100; width: 100;" position="0 0 0" rotation="-90 0 0" material="color: #7BC8A4" shadow="receive: true"></a-entity>
-    <a-sky src="#sky" repeat="10 10" transparent="true"></a-sky>
-    <a-light type="directional" light="castShadow:true;" position="1 1 1" intensity="1"></a-light>
-    <a-entity id="vr-model" gltf-model="#jmk" scale="4 4 4" position="0 1.5 -1.5" shadow="cast: true; receive: false"></a-entity>
-    <a-box src="#facebook_icon" position="0.8 2 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://facebook.com/utkarshgpta">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>s
+    <!-- Camera and Stuff -->
     <a-camera active="true" look-controls>
     </a-camera>
+
+    <!-- Basic Scene -->
+    <a-sky src="#sky" repeat="10 10" transparent="true"></a-sky>
+    <a-light type="directional" light="castShadow:true;" position="1 1 1" intensity="1"></a-light>
+    <a-entity id="floor" geometry="primitive: plane; height: 100; width: 100;" position="0 0 0" rotation="-90 0 0" material="color: #7BC8A4" shadow="receive: true"></a-entity>
+
+    <!-- Scene Filler -->
+    <a-entity id="vr-model" gltf-model="#jmk" scale="3 3 3" position="0 1.5 -1.5" shadow="cast: true; receive: false"></a-entity>
+
+    <a-box src="#facebook_icon" position="0 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="home" src="#facebook_icon" position="-0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="about" src="#facebook_icon" position="-0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="gigs" src="#facebook_icon" position="0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="instagram" src="#facebook_icon" position="0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="youtube" src="#facebook_icon" position="0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="telegram" src="#facebook_icon" position="-0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+    <a-box id="spotify" src="#facebook_icon" position="0 2.2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+    </a-box>
+
+
+
 </a-scene>
 </a-scene>
 </body>
