@@ -17,54 +17,131 @@
     </a-assets>
 
     <!-- Camera and Stuff -->
-    <a-camera active="true" look-controls>
+    <a-camera position="0 1.6 0" look-controls>
+        <a-cursor
+                id="cursor"
+                raycaster="objects: .clickable; far: 100"
+                material="color: yellow; shader: flat">
+        </a-cursor>
     </a-camera>
+
+    <!-- Controller -->
+    <a-entity
+            id="controller"
+            laser-controls="hand: right"
+            raycaster="objects: .clickable; far: 100"
+            line="color: red; opacity: 0.75">
+    </a-entity>
 
     <!-- Basic Scene -->
     <a-sky src="#sky" repeat="10 10" transparent="true"></a-sky>
     <a-light type="directional" light="castShadow:true;" position="1 1 1" intensity="1"></a-light>
     <a-entity id="floor" geometry="primitive: plane; height: 100; width: 100;" position="0 0 0" rotation="-90 0 0" material="color: #7BC8A4" shadow="receive: true"></a-entity>
-    <a-entity position="0 2 0" sound="src: #bg-noise; autoplay: true; loop: true"></a-entity>
 
+    <!-- Sound Entity -->
+    <a-entity id="sound-entity" sound="src: #bg-noise; autoplay: true; loop: true"></a-entity>
 
+    <!-- Clickable Box -->
+    <a-entity id="clickable-box"
+              class="clickable"
+              geometry="primitive: box"
+              material="color: red"
+              position="-1.5 1.5 -1.5">
+    </a-entity>
 
     <!-- Scene Filler -->
     <a-entity id="vr-model" gltf-model="#jmk" scale="3 3 3" position="0 1.5 -1.5" shadow="cast: true; receive: false"></a-entity>
 
-    <a-box src="#facebook_icon" position="0 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box src="#" position="0 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="home" src="#facebook_icon" position="-0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="home" src="#" position="-0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="about" src="#facebook_icon" position="-0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="about" src="#" position="-0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="gigs" src="#facebook_icon" position="0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="gigs" src="#" position="0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="instagram" src="#facebook_icon" position="0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="instagram" src="#" position="0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="youtube" src="#facebook_icon" position="0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="youtube" src="#" position="0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="telegram" src="#facebook_icon" position="-0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="telegram" src="#" position="-0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
 
-    <a-box id="spotify" src="#facebook_icon" position="0 2.2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+    <a-box id="spotify" src="#" position="0 2.2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
         <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
     </a-box>
-
-
 
 </a-scene>
-</a-scene>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const box = document.querySelector('#clickable-box');
+        const soundEntity = document.querySelector('#sound-entity');
+        box.addEventListener('click', () => {
+            console.log('Box geklickt!');
+            // Restlicher Code
+        });
+
+        if (box && soundEntity) {
+            box.addEventListener('click', () => {
+                const soundComponent = soundEntity.components.sound;
+                if (soundComponent.isPlaying) {
+                    soundComponent.pauseSound(); // Pausiert den Sound
+                    console.log('Sound pausiert');
+                } else {
+                    soundComponent.playSound(); // Führt den Sound fort
+                    console.log('Sound fortgesetzt');
+                }
+            });
+        } else {
+            console.error('Elemente nicht gefunden!');
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cursor = document.querySelector('#cursor');
+        const camera = document.querySelector('a-camera');
+
+        if (cursor && camera) {
+            const cursorDistance = 2; // Abstand des Cursors vor der Kamera
+
+            camera.addEventListener('componentchanged', (event) => {
+                if (event.detail.name === 'rotation') {
+                    const cameraWorldPosition = new THREE.Vector3();
+                    const cameraWorldDirection = new THREE.Vector3();
+
+                    // Kamera-Weltposition und Richtung berechnen
+                    camera.object3D.getWorldPosition(cameraWorldPosition);
+                    camera.object3D.getWorldDirection(cameraWorldDirection);
+
+                    // Cursor-Position relativ zur Kamera setzen
+                    const newPosition = cameraWorldPosition.clone().add(cameraWorldDirection.multiplyScalar(cursorDistance));
+                    cursor.object3D.position.set(newPosition.x, newPosition.y, newPosition.z);
+                }
+            });
+        } else {
+            console.error('Cursor oder Kamera nicht gefunden!');
+        }
+    });
+
+
+</script>
+
+
 </body>
+</html>
