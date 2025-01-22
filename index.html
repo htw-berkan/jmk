@@ -6,9 +6,18 @@
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <title>Jemek Jemowit</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <style>
+        body {
+            cursor: none; /* Versteckt den Standard-Cursor */
+        }
+    </style>
 </head>
 <body>
-<a-scene>
+<a-scene
+        id="scene"
+        cursor="rayOrigin: mouse"
+        vr-mode-ui="enabled: false">
+
     <!-- Assets -->
     <a-assets>
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
@@ -17,10 +26,12 @@
     </a-assets>
 
     <!-- Camera and Stuff -->
-    <a-camera position="0 1.6 0" look-controls>
+    <a-camera
+            position="0 1.6 2"
+            look-controls="enabled:false"
+            wasd-controls="enabled:false">
         <a-cursor
                 id="cursor"
-                raycaster="objects: .clickable; far: 100"
                 material="color: yellow; shader: flat">
         </a-cursor>
     </a-camera>
@@ -33,70 +44,94 @@
             line="color: red; opacity: 0.75">
     </a-entity>
 
-    <!-- Basic Scene -->
-    <a-sky src="#sky" repeat="10 10" transparent="true"></a-sky>
-    <a-light type="directional" light="castShadow:true;" position="1 1 1" intensity="1"></a-light>
-    <a-entity id="floor" geometry="primitive: plane; height: 100; width: 100;" position="0 0 0" rotation="-90 0 0" material="color: #7BC8A4" shadow="receive: true"></a-entity>
-
     <!-- Sound Entity -->
-    <a-entity id="sound-entity" sound="src: #bg-noise; autoplay: true; loop: true"></a-entity>
+    <a-entity
+            id="sound-entity"
+            sound="src: #bg-noise; autoplay: false; loop: true">
+    </a-entity>
 
-    <!-- Clickable Box -->
-    <a-entity id="clickable-box"
+    <!-- Basic Scene -->
+    <a-sky
+            src="#sky"
+            repeat="10 10"
+            transparent="true">
+    </a-sky>
+
+    <a-entity light="type: ambient; intensity: 0.1"></a-entity>
+    <a-entity light="type: directional; castShadow: true; intensity:0.5;" position=" 1 1 1"></a-entity>
+
+
+    <!--a-light
+            type="directional"
+            light="castShadow:true;"
+            position="1 1 1"
+            intensity="1">
+    </a-light-->
+
+    <a-entity
+            id="floor"
+            geometry="primitive: plane;"
+            scale="100 100"
+            position="0 0 0"
+            rotation="-90 0 0"
+            shadow="receive: true">
+    </a-entity>
+
+    <!-- Sound Control -->
+    <a-entity id="sound-control"
               class="clickable"
-              geometry="primitive: box"
-              material="color: red"
-              position="-1.5 1.5 -1.5">
+              geometry="primitive: plane;"
+              scale="0.1 0.1"
+              color="red"
+              position="1 2 1">
     </a-entity>
 
     <!-- Scene Filler -->
-    <a-entity id="vr-model" gltf-model="#jmk" scale="3 3 3" position="0 1.5 -1.5" shadow="cast: true; receive: false"></a-entity>
+    <a-entity
+            id="vr-model"
+            gltf-model="#jmk"
+            scale="3 3 3"
+            position="0 1.5 0"
+            shadow="cast: true; receive: false">
+    </a-entity>
 
-    <a-box src="#" position="0 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+    <a-entity hide-on-enter-vr id="buttons" position="0 2 1">
+        <a-entity class="clickable" id="#" geometry="primitive: plane;" src="#" scale="0.1 0.1" position="0 0.25 0" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="home" src="#" position="-0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="home" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="-0.25 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="about" src="#" position="-0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="about" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="-0.5 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="gigs" src="#" position="0.25 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="gigs" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0.25 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="instagram" src="#" position="0.5 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="instagram" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0.5 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="youtube" src="#" position="0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="youtube" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0.75 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="telegram" src="#" position="-0.75 2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="telegram" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="-0.75 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
 
-    <a-box id="spotify" src="#" position="0 2.2 -1" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        <a-animation attribute="rotation" dur="7000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
-    </a-box>
+        <a-entity class="clickable" id="spotify" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
+        </a-entity>
+    </a-entity>
 
 </a-scene>
 
+<!-- Sound Control Script -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const box = document.querySelector('#clickable-box');
+        const box = document.querySelector('#sound-control');
         const soundEntity = document.querySelector('#sound-entity');
-        box.addEventListener('click', () => {
-            console.log('Box geklickt!');
-            // Restlicher Code
-        });
 
         if (box && soundEntity) {
             box.addEventListener('click', () => {
+
                 const soundComponent = soundEntity.components.sound;
                 if (soundComponent.isPlaying) {
                     soundComponent.pauseSound(); // Pausiert den Sound
@@ -115,31 +150,52 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const cursor = document.querySelector('#cursor');
-        const camera = document.querySelector('a-camera');
+        const scene = document.querySelector('a-scene');
+        const look = document.querySelector('#vr-model');
 
-        if (cursor && camera) {
-            const cursorDistance = 2; // Abstand des Cursors vor der Kamera
+        if (cursor && scene) {
+            cursor.setAttribute('raycaster', 'objects: .clickable; far: 1');
+            // Linie für den Ray erstellen
+            const rayLine = document.createElement('a-entity');
+            rayLine.setAttribute('line', {
+                start: '0 0 0',
+                end: '0 0 -1', // Der Ray zeigt standardmäßig nach vorne
+                color: 'yellow',
+                opacity: 0.5,
+            });
+            cursor.appendChild(rayLine);
 
-            camera.addEventListener('componentchanged', (event) => {
-                if (event.detail.name === 'rotation') {
-                    const cameraWorldPosition = new THREE.Vector3();
-                    const cameraWorldDirection = new THREE.Vector3();
+            // Event-Listener für Mausbewegungen
+            document.addEventListener('mousemove', (event) => {
+                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
-                    // Kamera-Weltposition und Richtung berechnen
-                    camera.object3D.getWorldPosition(cameraWorldPosition);
-                    camera.object3D.getWorldDirection(cameraWorldDirection);
+                //console.log('Cursor mousemove', mouseX, mouseY);
 
-                    // Cursor-Position relativ zur Kamera setzen
-                    const newPosition = cameraWorldPosition.clone().add(cameraWorldDirection.multiplyScalar(cursorDistance));
-                    cursor.object3D.position.set(newPosition.x, newPosition.y, newPosition.z);
-                }
+                // Position des Cursors aktualisieren
+                cursor.object3D.position.set(mouseX, mouseY, -1);
+                look.object3D.lookAt(mouseX*120, mouseY*120, 100);
+
+                // Position der Linie aktualisieren
+                rayLine.setAttribute('line', {
+                    start: '0 0 0',
+                    end: `0 0 -1`, // Der Ray bleibt konstant in -Z-Richtung
+                    color: 'yellow',
+                });
             });
         } else {
-            console.error('Cursor oder Kamera nicht gefunden!');
+            console.error('Cursor oder Szene nicht gefunden!');
         }
     });
+</script>
 
-
+<script>
+    // Hier kannst du die Kamera-Position im VR-Modus anpassen
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+        const camera = document.querySelector('a-camera');
+        // Hier kannst du die Position der Kamera manuell setzen, falls gewünscht
+        camera.setAttribute('position', '0 1.6 2');
+    });
 </script>
 
 
