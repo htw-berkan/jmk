@@ -20,6 +20,7 @@
         <img id="sky" src="assets/jmk-bg.svg">
         <audio id="bg-noise" src="assets/WarteschleifeAnnabellxJemek.mp3" preload="auto"></audio>
         <a-asset-item id="radio-obj" src="/assets/Radio.obj"></a-asset-item>
+        <a-asset-item id="radio-mtl" src="/assets/Radio.mtl"></a-asset-item>
         <a-asset-item id="table-corona-obj" src="/assets/Tv_Table_Corona_Obj.obj"></a-asset-item>
         <a-asset-item id="table-Vray-obj" src="/assets/Tv_Table_Vray_Obj.obj"></a-asset-item>
     </a-assets>
@@ -61,7 +62,7 @@
     <!-- Sound Entity -->
     <a-entity
             id="sound-entity"
-            sound="src: #bg-noise; autoplay: false; loop: true">
+            sound="src: #bg-noise; autoplay: false; loop: true;">
     </a-entity>
 
     <!-- Basic Scene -->
@@ -92,7 +93,8 @@
 
     <a-entity id="table-radio-setup"
               position="1 0 -2.5"
-              scale=".5 0.5 .5">
+              scale="1 1 1"
+              rotation="0 -20 0">
 
         <a-entity id="table1"
                   obj-model="obj: #table-corona-obj;"
@@ -110,11 +112,18 @@
 
         <a-entity id="radio"
                   class="clickable"
-                  obj-model="obj: #radio-obj;"
+                  obj-model="obj: #radio-obj; mtl: #radio-mtl"
                   position=".78 1.42 0.2"
                   scale="0.001 0.001 0.001"
                   rotation="0 -10 0"
                   shadow="cast: true; receive: false">
+        </a-entity>
+        <a-entity id="sound-control-radio"
+                  class="sound-control"
+                  geometry="primitive: plane;"
+                  scale="0.1 0.1"
+                  material="color:#ff0000; opacity:0.5"
+                  position="0.97 1.55 0.2">
         </a-entity>
     </a-entity>
 
@@ -168,23 +177,41 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const box = document.querySelector('#sound-control-box');
+        const rKnob = document.querySelector('#sound-control-radio');
         const soundEntity = document.querySelector('#sound-entity');
 
-        if (box && soundEntity) {
-            box.addEventListener('click', () => {
-                console.log('clicked not clicker');
-                const soundComponent = soundEntity.components.sound;
-                if (soundComponent.isPlaying) {
-                    soundComponent.pauseSound(); // Pausiert den Sound
-                    console.log('Sound pausiert');
-                } else {
-                    soundComponent.playSound(); // Führt den Sound fort
-                    console.log('Sound fortgesetzt');
-                }
-            });
-        } else {
-            console.error('Elemente nicht gefunden!');
-        }
+        soundEntity.addEventListener('sound-loaded', () => {
+            const soundComponent = soundEntity.components.sound;
+            soundComponent.isPlaying = false;
+            if (rKnob){
+                rKnob.addEventListener('click', () => {
+                    if (soundComponent.isPlaying) {
+                        soundComponent.pauseSound(); // Pausiert den Sound
+                        console.log('Sound pausiert');
+                    } else {
+                        soundComponent.playSound(); // Führt den Sound fort
+                        console.log('Sound fortgesetzt');
+                    }
+                });
+            } else {
+                console.log('no knob');
+            }
+
+            if (box){
+                box.addEventListener('click', () => {
+                    if (soundComponent.isPlaying) {
+                        soundComponent.pauseSound(); // Pausiert den Sound
+                        console.log('Sound pausiert');
+                    } else {
+                        soundComponent.playSound(); // Führt den Sound fort
+                        console.log('Sound fortgesetzt');
+                    }
+                });
+            } else {
+                console.log('no box');
+            }
+
+        });
     });
 </script>
 
