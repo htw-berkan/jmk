@@ -19,17 +19,35 @@
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
         <img id="sky" src="assets/jmk-bg.svg">
         <audio id="bg-noise" src="assets/WarteschleifeAnnabellxJemek.mp3" preload="auto"></audio>
+        <a-asset-item id="radio-obj" src="/assets/Radio.obj"></a-asset-item>
+        <a-asset-item id="table-corona-obj" src="/assets/Tv_Table_Corona_Obj.obj"></a-asset-item>
+        <a-asset-item id="table-Vray-obj" src="/assets/Tv_Table_Vray_Obj.obj"></a-asset-item>
     </a-assets>
 
     <!-- Camera and Stuff -->
     <a-camera
+            id="2d-camera"
+            active="false"
             position="0 1.6 0"
             look-controls="enabled:false"
             wasd-controls="enabled:false">
         <a-cursor
                 id="cursor"
                 material="color: yellow; shader: flat"
-                position="0 0 -10">
+                position="0 0 -1">
+        </a-cursor>
+    </a-camera>
+
+    <a-camera
+            id="dev-camera"
+            active="true"
+            position="0 1.6 0"
+            look-controls="enabled:true"
+            wasd-controls="enabled:true">
+        <a-cursor
+                id="cursor"
+                material="color: yellow; shader: flat"
+                position="0 0 -1">
         </a-cursor>
     </a-camera>
 
@@ -72,12 +90,40 @@
             shadow="receive: true">
     </a-entity>
 
+    <a-entity id="table-radio-setup"
+              position="1 0 -2.5"
+              scale=".5 0.5 .5">
+
+        <a-entity id="table1"
+                  obj-model="obj: #table-corona-obj;"
+                  position="0 0 0"
+                  scale="0.002 0.002 0.002"
+                  shadow="cast: true; receive: false">
+        </a-entity>
+
+        <a-entity id="table2"
+                  obj-model="obj: #table-vray-obj;"
+                  position="0 0 0"
+                  scale="0.002 0.002 0.002"
+                  shadow="cast: true; receive: false">
+        </a-entity>
+
+        <a-entity id="radio"
+                  class="clickable"
+                  obj-model="obj: #radio-obj;"
+                  position=".78 1.42 0.2"
+                  scale="0.001 0.001 0.001"
+                  rotation="0 -10 0"
+                  shadow="cast: true; receive: false">
+        </a-entity>
+    </a-entity>
+
     <!-- Sound Control -->
-    <a-entity id="sound-control"
-              class="clickable"
+    <a-entity id="sound-control-box"
+              class="sound-control"
               geometry="primitive: plane;"
               scale="0.1 0.1"
-              color="red"
+              material="color:#ff0000"
               position="1 2 -1">
     </a-entity>
 
@@ -118,24 +164,15 @@
 
 </a-scene>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-       const clickAble = document.querySelector('.clickable');
-
-       clickAble.addEventListener('click', () => {
-           console.log('clickeded');
-       });
-    });
-</script>
-
 <!-- Sound Control Script -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const box = document.querySelector('#sound-control');
+        const box = document.querySelector('#sound-control-box');
         const soundEntity = document.querySelector('#sound-entity');
 
         if (box && soundEntity) {
             box.addEventListener('click', () => {
+                console.log('clicked not clicker');
                 const soundComponent = soundEntity.components.sound;
                 if (soundComponent.isPlaying) {
                     soundComponent.pauseSound(); // Pausiert den Sound
@@ -151,7 +188,19 @@
     });
 </script>
 
+<!-- Clicker -->
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const clickables = document.getElementsByClassName('clickable');
+        for (let i = 0; i < clickables.length; i++) {
+            clickables[i].addEventListener('click', () => {
+                console.log('clicked clicker');
+            });
+        }
+    });
+</script>
+
+<!--script>
     document.addEventListener('DOMContentLoaded', () => {
         const cursor = document.querySelector('#cursor');
         const scene = document.querySelector('a-scene');
@@ -182,8 +231,8 @@
 
                 // Position der Linie aktualisieren
                 rayLine.setAttribute('line', {
-                    start: '0 0 10',
-                    end: `0 0 -10`, // Der Ray bleibt konstant in -Z-Richtung
+                    start: '0 0 0',
+                    end: `0 0 -1`, // Der Ray bleibt konstant in -Z-Richtung
                     color: 'yellow',
                 });
             });
@@ -191,7 +240,7 @@
             console.error('Cursor oder Szene nicht gefunden!');
         }
     });
-</script>
+</script-->
 
 <!--script>
     // Hier kannst du die Kamera-Position im VR-Modus anpassen
