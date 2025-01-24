@@ -7,15 +7,11 @@
     <title>Jemek Jemowit</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <style>
-        body {
-            cursor: none; /* Versteckt den Standard-Cursor */
-        }
     </style>
 </head>
 <body>
 <a-scene
         id="scene"
-        cursor="rayOrigin: mouse"
         vr-mode-ui="enabled: false">
 
     <!-- Assets -->
@@ -27,12 +23,13 @@
 
     <!-- Camera and Stuff -->
     <a-camera
-            position="0 1.6 2"
+            position="0 1.6 0"
             look-controls="enabled:false"
             wasd-controls="enabled:false">
         <a-cursor
                 id="cursor"
-                material="color: yellow; shader: flat">
+                material="color: yellow; shader: flat"
+                position="0 0 -10">
         </a-cursor>
     </a-camera>
 
@@ -40,7 +37,6 @@
     <a-entity
             id="controller"
             laser-controls="hand: right"
-            raycaster="objects: .clickable; far: 100"
             line="color: red; opacity: 0.75">
     </a-entity>
 
@@ -57,16 +53,15 @@
             transparent="true">
     </a-sky>
 
-    <a-entity light="type: ambient; intensity: 0.1"></a-entity>
-    <a-entity light="type: directional; castShadow: true; intensity:0.5;" position=" 1 1 1"></a-entity>
+    <a-entity
+            light="type: ambient; intensity: 0.1">
 
+    </a-entity>
+    <a-entity
+            light="type: directional; castShadow: true; intensity:0.5;"
+            position=" 1 1 1">
 
-    <!--a-light
-            type="directional"
-            light="castShadow:true;"
-            position="1 1 1"
-            intensity="1">
-    </a-light-->
+    </a-entity>
 
     <a-entity
             id="floor"
@@ -83,7 +78,7 @@
               geometry="primitive: plane;"
               scale="0.1 0.1"
               color="red"
-              position="1 2 1">
+              position="1 2 -1">
     </a-entity>
 
     <!-- Scene Filler -->
@@ -91,11 +86,11 @@
             id="vr-model"
             gltf-model="#jmk"
             scale="3 3 3"
-            position="0 1.5 0"
+            position="0 1.5 -2"
             shadow="cast: true; receive: false">
     </a-entity>
 
-    <a-entity hide-on-enter-vr id="buttons" position="0 2 1">
+    <a-entity hide-on-enter-vr id="buttons" position="0 2 -1">
         <a-entity class="clickable" id="#" geometry="primitive: plane;" src="#" scale="0.1 0.1" position="0 0.25 0" navigate-on-click="url: http://#">
         </a-entity>
 
@@ -123,6 +118,16 @@
 
 </a-scene>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+       const clickAble = document.querySelector('.clickable');
+
+       clickAble.addEventListener('click', () => {
+           console.log('clickeded');
+       });
+    });
+</script>
+
 <!-- Sound Control Script -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -131,7 +136,6 @@
 
         if (box && soundEntity) {
             box.addEventListener('click', () => {
-
                 const soundComponent = soundEntity.components.sound;
                 if (soundComponent.isPlaying) {
                     soundComponent.pauseSound(); // Pausiert den Sound
@@ -154,7 +158,7 @@
         const look = document.querySelector('#vr-model');
 
         if (cursor && scene) {
-            cursor.setAttribute('raycaster', 'objects: .clickable; far: 1');
+            cursor.setAttribute('raycaster', 'objects: .clickable; far: 0');
             // Linie für den Ray erstellen
             const rayLine = document.createElement('a-entity');
             rayLine.setAttribute('line', {
@@ -178,8 +182,8 @@
 
                 // Position der Linie aktualisieren
                 rayLine.setAttribute('line', {
-                    start: '0 0 0',
-                    end: `0 0 -1`, // Der Ray bleibt konstant in -Z-Richtung
+                    start: '0 0 10',
+                    end: `0 0 -10`, // Der Ray bleibt konstant in -Z-Richtung
                     color: 'yellow',
                 });
             });
@@ -189,14 +193,14 @@
     });
 </script>
 
-<script>
+<!--script>
     // Hier kannst du die Kamera-Position im VR-Modus anpassen
     document.querySelector('a-scene').addEventListener('enter-vr', function () {
         const camera = document.querySelector('a-camera');
         // Hier kannst du die Position der Kamera manuell setzen, falls gewünscht
         camera.setAttribute('position', '0 1.6 2');
     });
-</script>
+</script-->
 
 
 </body>
