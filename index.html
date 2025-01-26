@@ -10,6 +10,74 @@
     </style>
 </head>
 <body>
+<script>
+    AFRAME.registerComponent('smooth-look-at', {
+        schema: {
+            target: { type: 'selector' }, // Ziel, auf das geschaut wird
+            lerpFactor: { type: 'number', default: 0.1 } // Interpolationsfaktor
+        },
+
+        init: function () {
+            this.targetPosition = new THREE.Vector3();
+            this.currentQuaternion = new THREE.Quaternion();
+            this.targetQuaternion = new THREE.Quaternion();
+        },
+
+        tick: function () {
+            const targetEl = this.data.target;
+            if (!targetEl) return;
+
+            // Zielposition abrufen
+            targetEl.object3D.getWorldPosition(this.targetPosition);
+
+            // Richtung berechnen
+            this.el.object3D.lookAt(this.targetPosition);
+
+            // Zielrotation erfassen
+            this.targetQuaternion.copy(this.el.object3D.quaternion);
+
+            // Aktuelle Rotation interpolieren
+            this.currentQuaternion.slerp(this.targetQuaternion, this.data.lerpFactor);
+
+            // Interpolierte Rotation setzen
+            this.el.object3D.quaternion.copy(this.currentQuaternion);
+        }
+    });
+
+
+
+    AFRAME.registerComponent('sound-control', {
+        schema: {
+            target: { type: 'selector' } // Das Ziel-Sound-Entity
+        },
+
+        init: function () {
+            const soundEntity = this.data.target;
+
+            if (!soundEntity) {
+                console.error('Sound-Control: Kein Ziel-Sound-Entity angegeben!');
+                return;
+            }
+
+            this.el.addEventListener('click', () => {
+                const soundComponent = soundEntity.components.sound;
+                if (!soundComponent) {
+                    console.error('Sound-Control: Ziel hat keine Sound-Komponente!');
+                    return;
+                }
+
+                if (soundComponent.isPlaying) {
+                    soundComponent.pauseSound();
+                    console.log('Sound pausiert');
+                } else {
+                    soundComponent.playSound();
+                    console.log('Sound abgespielt');
+                }
+            });
+        }
+    });
+
+</script>
 <a-scene
         id="scene"
         vr-mode-ui="enabled: false">
@@ -17,28 +85,20 @@
     <!-- Assets -->
     <a-assets>
         <a-asset-item id="jmk" src="assets/jmk-head.glb"></a-asset-item>
-        <img id="sky" src="assets/jmk-bg.svg">
+        <img id="sky-bg" src="assets/jmk-bg.svg">
         <audio id="bg-noise" src="assets/WarteschleifeAnnabellxJemek.mp3" preload="auto"></audio>
-        <a-asset-item id="radio-obj" src="/assets/Radio.obj"></a-asset-item>
-        <a-asset-item id="radio-mtl" src="/assets/Radio.mtl"></a-asset-item>
-        <a-asset-item id="table-corona-obj" src="/assets/Tv_Table_Corona_Obj.obj"></a-asset-item>
-        <a-asset-item id="table-Vray-obj" src="/assets/Tv_Table_Vray_Obj.obj"></a-asset-item>
+        <a-asset-item id="radio-obj" src="/assets/radio/Radio.obj"></a-asset-item>
+        <a-asset-item id="radio-mtl" src="/assets/radio/Radio.mtl"></a-asset-item>
+        <a-asset-item id="table-corona-obj" src="/assets/tisch/Tv_Table_Corona_Obj.obj"></a-asset-item>
+        <a-asset-item id="tafel-objekt" src="/assets/gltf/signboard.gltf"></a-asset-item>
+        <a-asset-item id="hut-obj" src="/assets/cabin/minha_cabana.obj"></a-asset-item>
+        <a-asset-item id="hut-mtl" src="/assets/cabin/minha_cabana.mtl"></a-asset-item>
+        <a-asset-item id="tv-obj" src="/assets/tv/Old_Tv_Set_nr1.obj"></a-asset-item>
+        <a-asset-item id="tv-mtl" src="/assets/tv/Old_Tv_Set_nr1.mtl"></a-asset-item>
+        <video id="bigos-vid" autoplay loop="true" src="assets/bigos.mp4"></video>
     </a-assets>
 
     <!-- Camera and Stuff -->
-    <a-camera
-            id="2d-camera"
-            active="false"
-            position="0 1.6 0"
-            look-controls="enabled:false"
-            wasd-controls="enabled:false">
-        <a-cursor
-                id="cursor"
-                material="color: yellow; shader: flat"
-                position="0 0 -1">
-        </a-cursor>
-    </a-camera>
-
     <a-camera
             id="dev-camera"
             active="true"
@@ -54,47 +114,50 @@
 
     <!-- Controller -->
     <a-entity
-            id="controller"
+            id="controller-left"
+            laser-controls="hand: left"
+            line="color: red; opacity: 0.75">
+    </a-entity>
+    <a-entity
+            id="controller-right"
             laser-controls="hand: right"
             line="color: red; opacity: 0.75">
     </a-entity>
 
-    <!-- Sound Entity -->
-    <a-entity
-            id="sound-entity"
-            sound="src: #bg-noise; autoplay: false; loop: true;">
-    </a-entity>
+
 
     <!-- Basic Scene -->
-    <a-sky
-            src="#sky"
+
+    <!-- Scene Sky -->
+    <a-sky id="sky"
+            src="#sky-bg"
+            radius="30"
             repeat="10 10"
             transparent="true">
     </a-sky>
 
-    <a-entity
+    <a-entity id="amLight"
             light="type: ambient; intensity: 0.1">
-
     </a-entity>
-    <a-entity
+    <a-entity id="dirLight"
             light="type: directional; castShadow: true; intensity:0.5;"
             position=" 1 1 1">
 
     </a-entity>
 
-    <a-entity
-            id="floor"
-            geometry="primitive: plane;"
-            scale="100 100"
+    <a-entity id="floor"
+            geometry="primitive: sphere; radius: 30;"
+            scale="1 0 1"
             position="0 0 0"
-            rotation="-90 0 0"
+            rotation="0 0 0"
             shadow="receive: true">
     </a-entity>
 
+    <!-- Table Radio -->
     <a-entity id="table-radio-setup"
-              position="1 0 -2.5"
-              scale="1 1 1"
-              rotation="0 -20 0">
+              position="2 0 -3.5"
+              scale="0.75 0.75 0.75"
+              rotation="0 -40 0">
 
         <a-entity id="table1"
                   obj-model="obj: #table-corona-obj;"
@@ -117,17 +180,45 @@
                   scale="0.001 0.001 0.001"
                   rotation="0 -10 0"
                   shadow="cast: true; receive: false">
+            <!-- Sound Entity -->
+            <a-entity
+                    id="sound-entity"
+                    sound="src: #bg-noise; autoplay: false; loop: true;">
+            </a-entity>
         </a-entity>
         <a-entity id="sound-control-radio"
                   class="sound-control"
                   geometry="primitive: plane;"
                   scale="0.1 0.1"
                   material="color:#ff0000; opacity:0.5"
-                  position="0.97 1.55 0.2">
+                  position="0.97 1.55 0.2"
+                  sound-control="target: #sound-entity">
+        </a-entity>
+
+        <!-- TV -->
+        <a-entity obj-model="obj: #tv-obj; mtl: #tv-mtl"
+                  position="-1 1.8 0"
+                  scale="1 1 1"
+                  shadow="cast: true; receive: false"
+                  rotation="0 10 0">
+            <a-video
+                    src="#bigos-vid"
+                    width="4"
+                    height="3"
+                    position="0 0 0.295"
+                    scale="0.17 0.17 0.17"></a-video>
         </a-entity>
     </a-entity>
 
-    <!-- Sound Control -->
+    <a-gltf-model id="tafel"
+              src="#tafel-objekt"
+              position="-2 0 -4"
+              scale="0.05 0.05 0.05"
+              rotation="0 30 0"
+              shadow="cast: true; receive: false">
+    </a-gltf-model>
+
+    <!-- Sound Control Box -->
     <a-entity id="sound-control-box"
               class="sound-control"
               geometry="primitive: plane;"
@@ -136,15 +227,19 @@
               position="1 2 -1">
     </a-entity>
 
-    <!-- Scene Filler -->
-    <a-entity
-            id="vr-model"
+    <!-- Head Objekt -->
+    <a-entity id="vr-model"
             gltf-model="#jmk"
-            scale="3 3 3"
-            position="0 1.5 -2"
-            shadow="cast: true; receive: false">
+            scale="50 50 50"
+            position="0 7 -20"
+            shadow="cast: true; receive: false"
+            smooth-look-at="target: #dev-camera; lerpFactor: 0.05">
     </a-entity>
 
+
+
+
+    <!-- Button Placeholders -->
     <a-entity hide-on-enter-vr id="buttons" position="0 2 -1">
         <a-entity class="clickable" id="#" geometry="primitive: plane;" src="#" scale="0.1 0.1" position="0 0.25 0" navigate-on-click="url: http://#">
         </a-entity>
@@ -173,48 +268,6 @@
 
 </a-scene>
 
-<!-- Sound Control Script -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const box = document.querySelector('#sound-control-box');
-        const rKnob = document.querySelector('#sound-control-radio');
-        const soundEntity = document.querySelector('#sound-entity');
-
-        soundEntity.addEventListener('sound-loaded', () => {
-            const soundComponent = soundEntity.components.sound;
-            soundComponent.isPlaying = false;
-            if (rKnob){
-                rKnob.addEventListener('click', () => {
-                    if (soundComponent.isPlaying) {
-                        soundComponent.pauseSound(); // Pausiert den Sound
-                        console.log('Sound pausiert');
-                    } else {
-                        soundComponent.playSound(); // Führt den Sound fort
-                        console.log('Sound fortgesetzt');
-                    }
-                });
-            } else {
-                console.log('no knob');
-            }
-
-            if (box){
-                box.addEventListener('click', () => {
-                    if (soundComponent.isPlaying) {
-                        soundComponent.pauseSound(); // Pausiert den Sound
-                        console.log('Sound pausiert');
-                    } else {
-                        soundComponent.playSound(); // Führt den Sound fort
-                        console.log('Sound fortgesetzt');
-                    }
-                });
-            } else {
-                console.log('no box');
-            }
-
-        });
-    });
-</script>
-
 <!-- Clicker -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -226,58 +279,5 @@
         }
     });
 </script>
-
-<!--script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const cursor = document.querySelector('#cursor');
-        const scene = document.querySelector('a-scene');
-        const look = document.querySelector('#vr-model');
-
-        if (cursor && scene) {
-            cursor.setAttribute('raycaster', 'objects: .clickable; far: 0');
-            // Linie für den Ray erstellen
-            const rayLine = document.createElement('a-entity');
-            rayLine.setAttribute('line', {
-                start: '0 0 0',
-                end: '0 0 -1', // Der Ray zeigt standardmäßig nach vorne
-                color: 'yellow',
-                opacity: 0.5,
-            });
-            cursor.appendChild(rayLine);
-
-            // Event-Listener für Mausbewegungen
-            document.addEventListener('mousemove', (event) => {
-                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-                //console.log('Cursor mousemove', mouseX, mouseY);
-
-                // Position des Cursors aktualisieren
-                cursor.object3D.position.set(mouseX, mouseY, -1);
-                look.object3D.lookAt(mouseX*120, mouseY*120, 100);
-
-                // Position der Linie aktualisieren
-                rayLine.setAttribute('line', {
-                    start: '0 0 0',
-                    end: `0 0 -1`, // Der Ray bleibt konstant in -Z-Richtung
-                    color: 'yellow',
-                });
-            });
-        } else {
-            console.error('Cursor oder Szene nicht gefunden!');
-        }
-    });
-</script-->
-
-<!--script>
-    // Hier kannst du die Kamera-Position im VR-Modus anpassen
-    document.querySelector('a-scene').addEventListener('enter-vr', function () {
-        const camera = document.querySelector('a-camera');
-        // Hier kannst du die Position der Kamera manuell setzen, falls gewünscht
-        camera.setAttribute('position', '0 1.6 2');
-    });
-</script-->
-
-
 </body>
 </html>
