@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.6.0/aframe-inspector.min.js"></script>
     <title>Jemek Jemowit</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <style>
@@ -11,19 +12,114 @@
 </head>
 <body>
 <script>
+
+    AFRAME.registerComponent('head-animation-control', {
+        schema: {
+            video: { type: 'selector' }, // Video-Element
+            head: { type: 'selector' },  // Kopf-Entity
+            animationSpeed: { type: 'number', default: 1 } // Geschwindigkeit der Animation
+        },
+
+        init: function () {
+            const videoEl = this.data.video;
+            const headEl = this.data.head;
+
+            if (!videoEl || !headEl) {
+                console.error('Head-Animation-Control: Video oder Kopf-Element fehlt!');
+                return;
+            }
+
+            // Überwache den Status des Videos
+            videoEl.addEventListener('play', () => {
+                console.log('Video läuft, Kopfanimation startet und smooth-look-at wird deaktiviert.');
+                this.disableSmoothLookAt();
+                this.startAnimation();
+            });
+
+            videoEl.addEventListener('pause', () => {
+                console.log('Video pausiert, Kopfanimation stoppt und smooth-look-at wird aktiviert.');
+                this.stopAnimation();
+                this.enableSmoothLookAt();
+            });
+        },
+
+        disableSmoothLookAt: function () {
+            const headEl = this.data.head;
+            if (headEl.hasAttribute('smooth-look-at')) {
+                headEl.setAttribute('smooth-look-at', 'enabled', false); // Deaktivieren
+            }
+        },
+
+        enableSmoothLookAt: function () {
+            const headEl = this.data.head;
+            if (headEl.hasAttribute('smooth-look-at')) {
+                headEl.setAttribute('smooth-look-at', 'enabled', true); // Aktivieren
+            }
+        },
+
+        startAnimation: function () {
+            const headEl = this.data.head;
+            const speed = this.data.animationSpeed;
+
+            headEl.setAttribute('animation', {
+                property: 'rotation',
+                to: '0 360 0',
+                loop: true,
+                dur: 1000 / speed
+            });
+        },
+
+        stopAnimation: function () {
+            const headEl = this.data.head;
+            headEl.removeAttribute('animation');
+        }
+    });
+
+
+
+    AFRAME.registerComponent('video-control',{
+       schema: {
+           target: {type: 'selector'},
+           action: {type: 'string', default: "play"}
+           },
+
+       init: function () {
+        const vid = this.data.target;
+
+        this.el.addEventListener('click', () => {
+            if (!vid) {
+                console.error('Video-Control: Ziel hat keine Video-Komponente!');
+                return;
+            }
+
+            if (this.data.action === "play") {
+                vid.play();
+                console.log('Video wird abgespielt.');
+            } else if (this.data.action === "pause") {
+                vid.pause();
+                console.log('Video ist pausiert.');
+            }
+        });
+    }
+    });
+
     AFRAME.registerComponent('smooth-look-at', {
         schema: {
             target: { type: 'selector' }, // Ziel, auf das geschaut wird
-            lerpFactor: { type: 'number', default: 0.1 } // Interpolationsfaktor
+            lerpFactor: { type: 'number', default: 0.1 }, // Interpolationsfaktor
+            enabled: { type: 'boolean', default: true } // Aktivierungsstatus
         },
 
         init: function () {
             this.targetPosition = new THREE.Vector3();
             this.currentQuaternion = new THREE.Quaternion();
             this.targetQuaternion = new THREE.Quaternion();
+            this.isTransitioning = false; // Status für sanften Übergang
         },
 
         tick: function () {
+            if (!this.data.enabled) return; // Nur ausführen, wenn aktiviert
+
             const targetEl = this.data.target;
             if (!targetEl) return;
 
@@ -41,8 +137,29 @@
 
             // Interpolierte Rotation setzen
             this.el.object3D.quaternion.copy(this.currentQuaternion);
+        },
+
+        update: function () {
+            // Wenn aktiviert wird, sanften Übergang starten
+            if (this.data.enabled && !this.isTransitioning) {
+                this.isTransitioning = true;
+
+                // Zielrotation berechnen
+                const targetEl = this.data.target;
+                if (targetEl) {
+                    targetEl.object3D.getWorldPosition(this.targetPosition);
+                    this.el.object3D.lookAt(this.targetPosition);
+                    this.targetQuaternion.copy(this.el.object3D.quaternion);
+                }
+
+                // Übergang zurücksetzen
+                setTimeout(() => {
+                    this.isTransitioning = false;
+                }, 500); // Sanfter Übergang für 500ms
+            }
         }
     });
+
 
 
 
@@ -78,9 +195,8 @@
     });
 
 </script>
-<a-scene
-        id="scene"
-        vr-mode-ui="enabled: false">
+<a-scene id="scene"
+         vr-mode-ui="enabled: false">
 
     <!-- Assets -->
     <a-assets>
@@ -93,175 +209,170 @@
         <a-asset-item id="tafel-objekt" src="assets/gltf/signboard.gltf"></a-asset-item>
         <a-asset-item id="tv-obj" src="assets/tv/Old_Tv_Set_nr1.obj"></a-asset-item>
         <a-asset-item id="tv-mtl" src="assets/tv/Old_Tv_Set-nr1.mtl"></a-asset-item>
-        <video id="bigos-vid" autoplay loop="true" src="assets/bigos.mp4"></video>
+        <video id="bigos-vid"  loop="true" src="assets/bigos.mp4"></video>
     </a-assets>
 
     <!-- Camera and Stuff -->
-    <a-camera
-            id="dev-camera"
-            active="true"
-            position="0 1.6 0"
-            look-controls="enabled:true"
-            wasd-controls="enabled:true">
-        <a-cursor
-                id="cursor"
-                material="color: yellow; shader: flat"
-                position="0 0 -1">
-        </a-cursor>
-    </a-camera>
+    <a-entity id="camera-rig"
+              position="0 1.6 0">
+        <a-camera id="camera"
+                  look-controls="enabled: true">
+            <a-cursor
+                    material="color: yellow; shader: flat"
+                    position="0 0 -1">
+            </a-cursor>
+        </a-camera>
 
-    <!-- Controller -->
-    <a-entity
-            id="controller-left"
-            laser-controls="hand: left"
-            line="color: red; opacity: 0.75">
+        <!-- Bewegung mit dem Thumbstick -->
+        <a-entity id="controller-left"
+                  laser-controls="hand: left"
+                  thumbstick-controls="enabled: true; movementEnabled: true; fly: false"
+                  raycaster="objects: .clickable"
+                  line="color: red; opacity: 0.75">
+        </a-entity>
+
+        <a-entity id="controller-right"
+                  laser-controls="hand: right"
+                  thumbstick-controls="enabled: true; movementEnabled: true; fly: false"
+                  raycaster="objects: .clickable"
+                  line="color: blue; opacity: 0.75">
+        </a-entity>
     </a-entity>
-    <a-entity
-            id="controller-right"
-            laser-controls="hand: right"
-            line="color: red; opacity: 0.75">
-    </a-entity>
-
-
 
     <!-- Basic Scene -->
-
     <!-- Scene Sky -->
-    <a-sky id="sky"
-            src="#sky-bg"
-            radius="30"
-            repeat="10 10"
-            transparent="true">
-    </a-sky>
+    <a-sky id="outterSky"
+           color="grey"
+           radius="100">
+        <a-sky id="sky"
+               src="#sky-bg"
+               radius="30"
+               repeat="10 10"
+               transparent="true">
+        </a-sky>
 
+    </a-sky>
     <a-entity id="amLight"
-            light="type: ambient; intensity: 0.1">
+              light="type: ambient; intensity: 0.1">
     </a-entity>
     <a-entity id="dirLight"
-            light="type: directional; castShadow: true; intensity:0.5;"
-            position=" 1 1 1">
+              light="type: directional; castShadow: true; intensity:1;"
+              position=" 10 10 10">
 
     </a-entity>
-
     <a-entity id="floor"
-            geometry="primitive: sphere; radius: 30;"
-            scale="1 0 1"
-            position="0 0 0"
-            rotation="0 0 0"
-            shadow="receive: true">
+              nav-mesh="true"
+              geometry="primitive: sphere; radius: 30;"
+              material="color: darkgreen;"
+              scale="1 0 1"
+              position="0 0 0"
+              rotation="0 0 0"
+              shadow="receive: true">
     </a-entity>
 
     <!-- Table Radio -->
     <a-entity id="table-radio-setup"
-              position="2 0 -3.5"
-              scale="0.75 0.75 0.75"
-              rotation="0 -40 0">
+              position="20 0 -15"
+              scale="1 1 1"
+              rotation="0 -60 0">
 
         <a-entity id="table1"
                   obj-model="obj: #table-corona-obj;"
                   position="0 0 0"
-                  scale="0.002 0.002 0.002"
-                  shadow="cast: true; receive: false">
-        </a-entity>
+                  scale="0.0025 0.0025 0.0025"
+                  shadow="cast: true; receive: true">
 
-        <a-entity id="table2"
-                  obj-model="obj: #table-vray-obj;"
-                  position="0 0 0"
-                  scale="0.002 0.002 0.002"
-                  shadow="cast: true; receive: false">
-        </a-entity>
+            <a-entity id="radio"
+                      obj-model="obj: #radio-obj; mtl: #radio-mtl"
+                      position="500 700 100"
+                      scale="0.7 0.7 0.7"
+                      rotation="0 -10 0"
+                      shadow="cast: true; receive: true">
+                <!-- Sound Entity -->
+                <a-entity id="sound-entity"
+                          sound="src: #bg-noise; autoplay: false; loop: true;">
+                </a-entity>
+                <a-entity id="sound-control-radio"
+                          class="sound-control clickable"
+                          geometry="primitive: plane;"
+                          scale="100 100"
+                          material="color:#ff0000; opacity:1"
+                          position="200 150 0"
+                          sound-control="target: #sound-entity">
+                </a-entity>
+            </a-entity>
 
-        <a-entity id="radio"
-                  class="clickable"
-                  obj-model="obj: #radio-obj; mtl: #radio-mtl"
-                  position=".78 1.42 0.2"
-                  scale="0.001 0.001 0.001"
-                  rotation="0 -10 0"
-                  shadow="cast: true; receive: false">
-            <!-- Sound Entity -->
-            <a-entity
-                    id="sound-entity"
-                    sound="src: #bg-noise; autoplay: false; loop: true;">
+                <!-- TV -->
+            <a-entity id="tv-setup"
+                      obj-model="obj: #tv-obj;"
+                      position="-400 1010 -50"
+                      scale="750 750 750"
+                      shadow="cast: true; receive: true"
+                      rotation="0 5 0">
+                <a-video id="tv-video"
+                         src="#bigos-vid"
+                         autoplay="false"
+                         width="4"
+                         height="3"
+                         position="0 0 0.295"
+                         scale="0.16 0.16 0.16">
+
+                </a-video>
+                <a-entity id="tv-play-pause"
+                          position="0.45 0 0.25"
+                          rotation="0 0 0"
+                          scale="0.1 0.1 0.1">
+                        <!-- Video Control Box -->
+                    <a-entity id="video-control-play-box"
+                              class="video-control clickable"
+                              geometry="primitive: plane;"
+                              scale="1 1"
+                              material="color:#ff0000"
+                              position="0 0 0"
+                              video-control="target: #bigos-vid; action: play">
+
+                    </a-entity>
+                    <a-entity id="video-control-pause-box"
+                              class="video-control clickable"
+                              geometry="primitive: plane;"
+                              scale="1 1"
+                              material="color:#0000ff"
+                              position="0 -1.5 0"
+                              video-control="target: #bigos-vid; action: pause">
+
+                    </a-entity>
+                </a-entity>
             </a-entity>
         </a-entity>
-        <a-entity id="sound-control-radio"
-                  class="sound-control"
-                  geometry="primitive: plane;"
-                  scale="0.1 0.1"
-                  material="color:#ff0000; opacity:0.5"
-                  position="0.97 1.55 0.2"
-                  sound-control="target: #sound-entity">
-        </a-entity>
-
-        <!-- TV -->
-        <a-entity obj-model="obj: #tv-obj;"
-                  position="-1 1.8 0"
-                  scale="1 1 1"
-                  shadow="cast: true; receive: false"
-                  rotation="0 10 0">
-            <a-video
-                    src="#bigos-vid"
-                    width="4"
-                    height="3"
-                    position="0 0 0.295"
-                    scale="0.17 0.17 0.17"></a-video>
-        </a-entity>
+    </a-entity>
     </a-entity>
 
-    <a-gltf-model id="tafel"
-              src="#tafel-objekt"
-              position="-2 0 -4"
-              scale="0.05 0.05 0.05"
-              rotation="0 30 0"
-              shadow="cast: true; receive: false">
-    </a-gltf-model>
 
-    <!-- Sound Control Box -->
-    <a-entity id="sound-control-box"
-              class="sound-control"
-              geometry="primitive: plane;"
-              scale="0.1 0.1"
-              material="color:#ff0000"
-              position="1 2 -1">
+    <a-entity id="tafel-rig"
+              position="-20 0 -13"
+              rotation="0 70 0">
+        <a-gltf-model id="tafel"
+                      src="#tafel-objekt"
+                      position="0 0 0"
+                      scale="0.1 0.1 0.1"
+                      shadow="cast: true; receive: true">
+
+        </a-gltf-model>
+        <a-entity
+                scale="5 5 5"
+                position="1.4 2.85 0.07"
+                id="tafel-text"
+                text="value: NEXT GIGS:; color: blue; font:	https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; height: 50">
+        </a-entity>
     </a-entity>
-
     <!-- Head Objekt -->
     <a-entity id="vr-model"
             gltf-model="#jmk"
             scale="50 50 50"
             position="0 7 -20"
             shadow="cast: true; receive: false"
-            smooth-look-at="target: #dev-camera; lerpFactor: 0.05">
-    </a-entity>
-
-
-
-
-    <!-- Button Placeholders -->
-    <a-entity hide-on-enter-vr id="buttons" position="0 2 -1">
-        <a-entity class="clickable" id="#" geometry="primitive: plane;" src="#" scale="0.1 0.1" position="0 0.25 0" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="home" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="-0.25 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="about" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="-0.5 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="gigs" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0.25 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="instagram" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0.5 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="youtube" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0.75 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="telegram" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="-0.75 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
-
-        <a-entity class="clickable" id="spotify" src="#" geometry="primitive: plane;" scale="0.1 0.1" position="0 0 0" depth="0.15" height="0.15" width="0.15" navigate-on-click="url: http://#">
-        </a-entity>
+            smooth-look-at="target: #camera; lerpFactor: 0.05; enabled: true"
+            head-animation-control="video: #bigos-vid; head: #vr-model; animationSpeed: 1">
     </a-entity>
 
 </a-scene>
