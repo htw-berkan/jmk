@@ -37,7 +37,8 @@
             });
 
             videoEl.addEventListener('pause', () => {
-                console.log('Video pausiert, Kopfanimation stoppt und smooth-look-at wird aktiviert.');
+                console.log('Video pausiert, Kopfanimation stoppt und smooth-look-at wird aktiv' +
+                    'iert.');
                 this.stopAnimation();
                 this.enableSmoothLookAt();
             });
@@ -272,7 +273,7 @@
 
     <!-- Table Radio -->
     <a-entity id="table-radio-setup"
-              position="20 0 -15"
+              position="1 0 -1"
               scale="1 1 1"
               rotation="0 -60 0">
 
