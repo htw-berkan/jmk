@@ -195,8 +195,7 @@
     });
 
 </script>
-<a-scene id="scene"
-         vr-mode-ui="enabled: false">
+<a-scene id="scene">
 
     <!-- Assets -->
     <a-assets>
@@ -213,8 +212,9 @@
     </a-assets>
 
     <!-- Camera and Stuff -->
-    <a-entity id="camera-rig"
-              position="0 1.6 0">
+    <a-entity id="camera-rig "
+              position="0 1.6 0"
+              wasd-controls="enabled: true">
         <a-camera id="camera"
                   look-controls="enabled: true">
             <a-cursor
