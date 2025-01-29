@@ -76,8 +76,6 @@
         }
     });
 
-
-
     AFRAME.registerComponent('video-control',{
        schema: {
            target: {type: 'selector'},
@@ -161,9 +159,6 @@
         }
     });
 
-
-
-
     AFRAME.registerComponent('sound-control', {
         schema: {
             target: { type: 'selector' } // Das Ziel-Sound-Entity
@@ -244,10 +239,10 @@
     <!-- Scene Sky -->
     <a-sky id="outterSky"
            color="grey"
-           radius="100">
+           radius="20">
         <a-sky id="sky"
                src="#sky-bg"
-               radius="30"
+               radius="15"
                repeat="10 10"
                transparent="true">
         </a-sky>
@@ -263,7 +258,7 @@
     </a-entity>
     <a-entity id="floor"
               nav-mesh="true"
-              geometry="primitive: sphere; radius: 30;"
+              geometry="primitive: sphere; radius: 15;"
               material="color: darkgreen;"
               scale="1 0 1"
               position="0 0 0"
@@ -273,9 +268,9 @@
 
     <!-- Table Radio -->
     <a-entity id="table-radio-setup"
-              position="1 0 -1"
+              position="5 0 -8"
               scale="1 1 1"
-              rotation="0 -60 0">
+              rotation="0 -20 0">
 
         <a-entity id="table1"
                   obj-model="obj: #table-corona-obj;"
@@ -350,8 +345,8 @@
 
 
     <a-entity id="tafel-rig"
-              position="-20 0 -13"
-              rotation="0 70 0">
+              position="-5 0 -8"
+              rotation="0 50 0">
         <a-gltf-model id="tafel"
                       src="#tafel-objekt"
                       position="0 0 0"
@@ -369,8 +364,8 @@
     <!-- Head Objekt -->
     <a-entity id="vr-model"
             gltf-model="#jmk"
-            scale="50 50 50"
-            position="0 7 -20"
+            scale="15 15 15"
+            position="0 5 -10"
             shadow="cast: true; receive: false"
             smooth-look-at="target: #camera; lerpFactor: 0.05; enabled: true"
             head-animation-control="video: #bigos-vid; head: #vr-model; animationSpeed: 1">
